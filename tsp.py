@@ -12,9 +12,12 @@ class TSP:
         self.neighborhood, self.name, self.optimum = neighborhood, name, optimum
         self.dist = [[math.hypot(a[0] - b[0], a[1] - b[1]) for b in coords] for a in coords]
         n = self.n
-        # (0, n-1) vynechavame: v cykle je to degenerovany pripad
+        # (0, n-1) vynechavame: v cykle je to degenerovany pripad.
+        # Pri 2-opt vynechavame aj otocenie useku dlzky n-1, ktore da tu istu
+        # trasu (len opacne orientovanu), teda delta = 0 a nema ziadny efekt.
         self._moves = [(i, j) for i in range(n) for j in range(i + 1, n)
-                       if not (i == 0 and j == n - 1)]
+                       if not (i == 0 and j == n - 1)
+                       and not (neighborhood == "2opt" and j - i + 1 >= n - 1)]
 
     @staticmethod
     def random_instance(n, rng, size=1000):
